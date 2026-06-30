@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Cliente | ilCapo</title>
+<link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+
+<body>
+
+<div class="sidebar">
+<h2>🍕 ilCapo</h2>
+<ul>
+<li>🏠 Inicio</li>
+<li>🍕 Pizzas</li>
+<li>🛒 Carrito</li>
+<li>📦 Mis pedidos</li>
+</ul>
+</div>
+
+<div class="main">
+
+<div class="topbar">
+<h3 id="welcome">Bienvenido</h3>
+<button onclick="logout()" style="padding:8px 12px;background:#c62828;color:#fff;border:none;border-radius:8px">
+Salir
+</button>
+</div>
+
+<div class="content">
+
+<h2>🍕 Catálogo</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>Especial</h3>
+<p>$9500</p>
+<button onclick="add('especial')">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Muzzarella</h3>
+<p>$8000</p>
+<button onclick="add('muzzarella')">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Calabresa</h3>
+<p>$10000</p>
+<button onclick="add('calabresa')">Agregar</button>
+</div>
+
+</div>
+
+<div style="margin-top:20px;background:#fff;padding:20px;border-radius:12px">
+<h3>🛒 Carrito</h3>
+<ul id="carrito"></ul>
+
+<button onclick="confirmar()" style="margin-top:10px;padding:10px 15px;background:#c62828;color:#fff;border:none;border-radius:8px">
+Confirmar pedido
+</button>
+</div>
+
+</div>
+
+</div>
+
+<script src="../assets/js/main.js"></script>
+<script>
+protectClient();
+
+let user = getUser();
+document.getElementById("welcome").innerText = "Bienvenido " + user.user;
+
+// carrito
+let carrito = [];
+
+function add(p){
+carrito.push(p);
+render();
+}
+
+function render(){
+let list=document.getElementById("carrito");
+list.innerHTML="";
+carrito.forEach(p=>{
+let li=document.createElement("li");
+li.innerText="🍕 "+p;
+li.style.padding="5px 0";
+list.appendChild(li);
+});
+}
+
+function confirmar(){
+let pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
+
+pedidos.push({
+user:user.user,
+items:[...carrito],
+fecha:new Date().toLocaleString()
+});
+
+localStorage.setItem("pedidos",JSON.stringify(pedidos));
+
+carrito=[];
+render();
+
+alert("Pedido realizado ✅");
+}
+</script>
+
+</body>
+</html>

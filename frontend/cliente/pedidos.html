@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Mis pedidos | ilCapo</title>
+<link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+
+<body>
+
+<div class="sidebar">
+<h2>🍕 ilCapo</h2>
+<ul>
+<li><a href="home.html" style="color:#fff;text-decoration:none">🏠 Inicio</a></li>
+<li>📦 Mis pedidos</li>
+</ul>
+</div>
+
+<div class="main">
+
+<div class="topbar">
+<h3>📦 Mis pedidos</h3>
+</div>
+
+<div class="content">
+
+<div style="background:#fff;padding:20px;border-radius:12px">
+<ul id="listaPedidos"></ul>
+</div>
+
+</div>
+
+</div>
+
+<script src="../assets/js/main.js"></script>
+
+<script>
+protectClient();
+
+let user = getUser();
+
+let pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
+
+let filtrados = pedidos.filter(p => p.user === user.user);
+
+let list = document.getElementById("listaPedidos");
+
+if(filtrados.length === 0){
+list.innerHTML = "<p>No tenés pedidos aún</p>";
+}
+
+filtrados.forEach(p => {
+let li = document.createElement("li");
+li.style.padding="10px 0";
+li.innerText = "🍕 " + p.items.join(", ") + " - " + p.fecha;
+list.appendChild(li);
+});
+</script>
+
+</body>
+</html>

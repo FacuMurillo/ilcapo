@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Pizzas | ilCapo</title>
+<link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+
+<body>
+
+<div class="sidebar">
+  <div class="brand">ilCapo ERP</div>
+
+  <nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="pizzas.html">Pizzas</a>
+    <a href="ingredientes.html">Ingredientes</a>
+    <a href="pedidos.html">Pedidos</a>
+    <a href="proveedores.html">Proveedores</a>
+    <a href="clientes.html">Clientes</a>
+    <a href="reportes.html">Reportes</a>
+  </nav>
+
+  <div class="logout">
+    <button onclick="logout()">Cerrar sesión</button>
+  </div>
+</div>
+
+<div class="main">
+
+<div class="topbar">
+<h3>Pizzas</h3>
+</div>
+
+<!-- FORM AGREGAR -->
+<div class="card">
+<h3>Agregar nueva pizza</h3>
+
+<input id="nombre" placeholder="Nombre pizza">
+<input id="precio" placeholder="Precio">
+
+<button onclick="agregarPizza()">Agregar</button>
+</div>
+
+<!-- GRID -->
+<div class="pizza-grid" id="gridPizzas"></div>
+
+</div>
+
+<script src="../assets/js/main.js"></script>
+<script src="../assets/js/pizzas.js"></script>
+
+</body>
+</html>

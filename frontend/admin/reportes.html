@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Reportes | ilCapo</title>
+<link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+
+<body>
+
+<div class="sidebar">
+  <div class="brand">ilCapo</div>
+
+  <nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="pizzas.html">Pizzas</a>
+    <a href="ingredientes.html">Ingredientes</a>
+    <a href="pedidos.html">Pedidos</a>
+    <a href="proveedores.html">Proveedores</a>
+    <a href="clientes.html">Clientes</a>
+    <a href="reportes.html">Reportes</a>
+  </nav>
+
+  <div class="logout">
+    <button onclick="logout()">Cerrar sesión</button>
+  </div>
+</div>
+
+<div class="main">
+
+<div class="topbar">
+<h3>📈 Reportes</h3>
+</div>
+
+<div class="content">
+
+<div class="cards">
+
+<div class="card">
+<h3>Total pedidos</h3>
+<p id="totalPedidos"></p>
+</div>
+
+<div class="card">
+<h3>Clientes activos</h3>
+<p id="totalClientes"></p>
+</div>
+
+<div class="card">
+<h3>Ingresos estimados</h3>
+<p id="ingresos"></p>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="../assets/js/main.js"></script>
+
+<script>
+protectAdmin();
+
+let pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
+
+let clientes = [...new Set(pedidos.map(p => p.user))];
+
+document.getElementById("totalPedidos").innerText = pedidos.length;
+document.getElementById("totalClientes").innerText = clientes.length;
+document.getElementById("ingresos").innerText = "$" + (pedidos.length * 8500);
+</script>
+
+</body>
+</html>

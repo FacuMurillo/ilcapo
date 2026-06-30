@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Ingredientes | ilCapo ERP</title>
+<link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+
+<body>
+
+<div class="sidebar">
+  <div class="brand">ilCapo</div>
+
+  <nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="pizzas.html">Pizzas</a>
+    <a href="ingredientes.html">Ingredientes</a>
+    <a href="pedidos.html">Pedidos</a>
+    <a href="proveedores.html">Proveedores</a>
+    <a href="clientes.html">Clientes</a>
+    <a href="reportes.html">Reportes</a>
+  </nav>
+
+  <div class="logout">
+    <button onclick="logout()">Cerrar sesión</button>
+  </div>
+</div>
+
+<div class="main">
+
+<div class="topbar">
+<h3>Ingredientes</h3>
+</div>
+
+<div class="content">
+
+<div class="cards">
+
+<div class="card" id="mozzCard">
+<h3>Mozzarella</h3>
+<p id="mozz">20 kg</p>
+</div>
+
+<div class="card" id="salsaCard">
+<h3>Salsa</h3>
+<p id="salsa">15 L</p>
+</div>
+
+<div class="card" id="prepCard">
+<h3>Prepizzas</h3>
+<p id="prepizza">40 u</p>
+</div>
+
+<div class="card" id="jamonCard">
+<h3>Jamón</h3>
+<p id="jamon">8 kg</p>
+</div>
+
+</div>
+
+<button onclick="reponer()" style="padding:10px 15px;background:#22c55e;color:#fff;border:none;border-radius:8px;cursor:pointer;margin-top:15px">
+🔄 Reponer stock proveedor
+</button>
+
+</div>
+
+</div>
+
+<script src="../assets/js/ingredientes.js"></script>
+
+</body>
+</html>
