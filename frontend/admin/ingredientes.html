@@ -4,26 +4,36 @@
 <meta charset="UTF-8">
 <title>Ingredientes | ilCapo ERP</title>
 <link rel="stylesheet" href="../assets/css/dashboard.css">
+<link rel="icon" type="image/png" href="../assets/icons/favicon.ico" />
 </head>
 
 <body>
 
 <div class="sidebar">
-  <div class="brand">ilCapo</div>
 
-  <nav>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="pizzas.html">Pizzas</a>
-    <a href="ingredientes.html">Ingredientes</a>
-    <a href="pedidos.html">Pedidos</a>
-    <a href="proveedores.html">Proveedores</a>
-    <a href="clientes.html">Clientes</a>
-    <a href="reportes.html">Reportes</a>
+  <div class="brand">
+    <div>
+      <h2>ilCapo</h2>
+      <span>Admin Panel</span>
+    </div>
+  </div>
+
+  <nav class="menu">
+
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="pizzas.html">🍕 Pizzas</a>
+    <a href="ingredientes.html" class="active">🧀 Ingredientes</a>
+    <a href="pedidos.html">📦 Pedidos</a>
+    <a href="proveedores.html">🚚 Proveedores</a>
+    <a href="clientes.html">👥 Clientes</a>
+    <a href="reportes.html">📈 Reportes</a>
+
   </nav>
 
-  <div class="logout">
+ <div class="logoutBox">
     <button onclick="logout()">Cerrar sesión</button>
   </div>
+
 </div>
 
 <div class="main">
@@ -33,39 +43,80 @@
 </div>
 
 <div class="content">
+  <div class="ingredients-layout">
 
+  <div class="ingredients-left">
 <div class="cards">
 
-<div class="card" id="mozzCard">
-<h3>Mozzarella</h3>
-<p id="mozz">20 kg</p>
+  <div class="card" id="mozzCard">
+    <h3>Mozzarella</h3>
+    <p id="mozz">20 kg</p>
+  </div>
+
+  <div class="card" id="salsaCard">
+    <h3>Salsa</h3>
+    <p id="salsa">15 L</p>
+  </div>
+
+  <div class="card" id="prepCard">
+    <h3>Prepizzas</h3>
+    <p id="prepizza">40 u</p>
+  </div>
+
+  <div class="card" id="jamonCard">
+    <h3>Jamón</h3>
+    <p id="jamon">8 kg</p>
+  </div>
+
+  <div class="card" id="anchoasCard">
+    <h3>Anchoas</h3>
+    <p id="anchoas">5 kg</p>
+  </div>
+
+  <div class="card" id="terneraCard">
+    <h3>Ternera</h3>
+    <p id="ternera">5 kg</p>
+  </div>
+
+  <div class="card" id="calabresaCard">
+    <h3>Calabresa</h3>
+    <p id="calabresa">5 kg</p>
+  </div>
+
+  <div class="card" id="roquefortCard">
+    <h3>Roquefort</h3>
+    <p id="roquefort">5 kg</p>
+  </div>
+
 </div>
 
-<div class="card" id="salsaCard">
-<h3>Salsa</h3>
-<p id="salsa">15 L</p>
 </div>
 
-<div class="card" id="prepCard">
-<h3>Prepizzas</h3>
-<p id="prepizza">40 u</p>
+<div class="card">
+  <h3>Reponer stock</h3>
+
+  <select id="ingrediente">
+    <option value="mozzarella">Mozzarella</option>
+    <option value="salsa">Salsa</option>
+    <option value="prepizza">Prepizza</option>
+    <option value="jamon">Jamón</option>
+    <option value="anchoas">Anchoas</option>
+    <option value="ternera">Ternera</option>
+    <option value="calabresa">Calabresa</option>
+    <option value="roquefort">Roquefort</option>
+  </select>
+
+  <input id="cantidad" type="number" placeholder="Cantidad">
+
+  <button onclick="reponerStock()">Agregar stock</button>
 </div>
 
-<div class="card" id="jamonCard">
-<h3>Jamón</h3>
-<p id="jamon">8 kg</p>
 </div>
 
 </div>
 
-<button onclick="reponer()" style="padding:10px 15px;background:#22c55e;color:#fff;border:none;border-radius:8px;cursor:pointer;margin-top:15px">
-🔄 Reponer stock proveedor
-</button>
-
 </div>
-
-</div>
-
+<script src="../assets/js/main.js"></script>
 <script src="../assets/js/ingredientes.js"></script>
 
 </body>

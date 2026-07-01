@@ -1,61 +1,57 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<title>Mis pedidos | ilCapo</title>
-<link rel="stylesheet" href="../assets/css/dashboard.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mis pedidos | ilCapo</title>
+
+    <link rel="stylesheet" href="../assets/css/cliente.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 </head>
 
 <body>
 
-<div class="sidebar">
-<h2>🍕 ilCapo</h2>
-<ul>
-<li><a href="home.html" style="color:#fff;text-decoration:none">🏠 Inicio</a></li>
-<li>📦 Mis pedidos</li>
-</ul>
-</div>
+<header class="header">
 
-<div class="main">
+    <div class="logo">
+        <img src="../assets/img/logo.png">
+        <h2>ilCapo</h2>
+    </div>
 
-<div class="topbar">
-<h3>📦 Mis pedidos</h3>
-</div>
+    <nav>
+        <a href="home.html">Inicio</a>
+        <a href="home.html#menu">Menú</a>
+        <a href="pedidos.html" class="active">Mis pedidos</a>
+    </nav>
 
-<div class="content">
+    <div class="acciones">
+        <button class="logout" onclick="logout()">Cerrar sesión</button>
+    </div>
 
-<div style="background:#fff;padding:20px;border-radius:12px">
-<ul id="listaPedidos"></ul>
-</div>
+</header>
 
-</div>
 
-</div>
+<section class="menu">
+
+    <div class="titulo">
+        <h2>Mis pedidos</h2>
+        <p>Historial de tus compras</p>
+    </div>
+
+    <div id="listaPedidos" class="catalogo">
+
+        <!-- JS genera pedidos -->
+
+    </div>
+
+</section>
 
 <script src="../assets/js/main.js"></script>
-
-<script>
-protectClient();
-
-let user = getUser();
-
-let pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
-
-let filtrados = pedidos.filter(p => p.user === user.user);
-
-let list = document.getElementById("listaPedidos");
-
-if(filtrados.length === 0){
-list.innerHTML = "<p>No tenés pedidos aún</p>";
-}
-
-filtrados.forEach(p => {
-let li = document.createElement("li");
-li.style.padding="10px 0";
-li.innerText = "🍕 " + p.items.join(", ") + " - " + p.fecha;
-list.appendChild(li);
-});
-</script>
+<script src="pedidos.js"></script>
 
 </body>
 </html>

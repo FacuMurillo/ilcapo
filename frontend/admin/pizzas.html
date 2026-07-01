@@ -4,26 +4,36 @@
 <meta charset="UTF-8">
 <title>Pizzas | ilCapo</title>
 <link rel="stylesheet" href="../assets/css/dashboard.css">
+
 </head>
 
 <body>
 
 <div class="sidebar">
-  <div class="brand">ilCapo ERP</div>
 
-  <nav>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="pizzas.html">Pizzas</a>
-    <a href="ingredientes.html">Ingredientes</a>
-    <a href="pedidos.html">Pedidos</a>
-    <a href="proveedores.html">Proveedores</a>
-    <a href="clientes.html">Clientes</a>
-    <a href="reportes.html">Reportes</a>
+  <div class="brand">
+    <div>
+      <h2>ilCapo</h2>
+      <span>Admin Panel</span>
+    </div>
+  </div>
+
+  <nav class="menu">
+
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="pizzas.html" class="active">🍕 Pizzas</a>
+    <a href="ingredientes.html">🧀 Ingredientes</a>
+    <a href="pedidos.html">📦 Pedidos</a>
+    <a href="proveedores.html">🚚 Proveedores</a>
+    <a href="clientes.html">👥 Clientes</a>
+    <a href="reportes.html">📈 Reportes</a>
+
   </nav>
 
-  <div class="logout">
+  <div class="logoutBox">
     <button onclick="logout()">Cerrar sesión</button>
   </div>
+
 </div>
 
 <div class="main">

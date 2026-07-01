@@ -1,114 +1,177 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Cliente | ilCapo</title>
-<link rel="stylesheet" href="../assets/css/dashboard.css">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<body>
+    <title>ilCapo | Pizzería</title>
 
-<div class="sidebar">
-<h2>🍕 ilCapo</h2>
-<ul>
-<li>🏠 Inicio</li>
-<li>🍕 Pizzas</li>
-<li>🛒 Carrito</li>
-<li>📦 Mis pedidos</li>
-</ul>
-</div>
+    <link rel="stylesheet" href="../assets/css/cliente.css" />
 
-<div class="main">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  </head>
 
-<div class="topbar">
-<h3 id="welcome">Bienvenido</h3>
-<button onclick="logout()" style="padding:8px 12px;background:#c62828;color:#fff;border:none;border-radius:8px">
-Salir
-</button>
-</div>
+  <body>
+    <!-- ================= NAVBAR ================= -->
 
-<div class="content">
+    <header class="header">
+      <div class="logo">
+        <img src="../assets/img/logo.png" alt="Logo" />
 
-<h2>🍕 Catálogo</h2>
+        <h2>ilCapo</h2>
+      </div>
 
-<div class="cards">
+      <nav>
+        <a href="#">Inicio</a>
 
-<div class="card">
-<h3>Especial</h3>
-<p>$9500</p>
-<button onclick="add('especial')">Agregar</button>
-</div>
+        <a href="#menu">Menú</a>
 
-<div class="card">
-<h3>Muzzarella</h3>
-<p>$8000</p>
-<button onclick="add('muzzarella')">Agregar</button>
-</div>
+        <a href="pedidos.html">Mis pedidos</a>
+      </nav>
 
-<div class="card">
-<h3>Calabresa</h3>
-<p>$10000</p>
-<button onclick="add('calabresa')">Agregar</button>
-</div>
+      <div class="acciones">
+        <div class="buscador">
+          <input type="text" id="buscar" placeholder="Buscar pizza..." />
+        </div>
 
-</div>
+        <button class="carrito-btn" id="abrirCarrito">
+          🛒
 
-<div style="margin-top:20px;background:#fff;padding:20px;border-radius:12px">
-<h3>🛒 Carrito</h3>
-<ul id="carrito"></ul>
+          <span id="contadorCarrito">0</span>
+        </button>
 
-<button onclick="confirmar()" style="margin-top:10px;padding:10px 15px;background:#c62828;color:#fff;border:none;border-radius:8px">
-Confirmar pedido
-</button>
-</div>
+        <button class="logout" onclick="logout()">Cerrar sesión</button>
+      </div>
+    </header>
 
-</div>
+    <!-- ================= HERO ================= -->
 
-</div>
+    <section class="hero">
+      <div class="overlay"></div>
 
-<script src="../assets/js/main.js"></script>
-<script>
-protectClient();
+      <div class="hero-content">
+        <h1>La auténtica pizza artesanal.</h1>
 
-let user = getUser();
-document.getElementById("welcome").innerText = "Bienvenido " + user.user;
+        <p>
+          Elaboradas con ingredientes frescos, masa fermentada y cocidas en
+          horno de piedra.
+        </p>
 
-// carrito
-let carrito = [];
+        <a href="#menu">
+          <button>Ver menú</button>
+        </a>
+      </div>
+    </section>
 
-function add(p){
-carrito.push(p);
-render();
-}
+    <!-- ================= BENEFICIOS ================= -->
 
-function render(){
-let list=document.getElementById("carrito");
-list.innerHTML="";
-carrito.forEach(p=>{
-let li=document.createElement("li");
-li.innerText="🍕 "+p;
-li.style.padding="5px 0";
-list.appendChild(li);
-});
-}
+    <section class="beneficios">
+      <div class="beneficio">
+        <h3>Ingredientes Frescos</h3>
 
-function confirmar(){
-let pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
+        <p>
+          Utilizamos productos seleccionados diariamente para garantizar la
+          mejor calidad.
+        </p>
+      </div>
 
-pedidos.push({
-user:user.user,
-items:[...carrito],
-fecha:new Date().toLocaleString()
-});
+      <div class="beneficio">
+        <h3>Horno de Piedra</h3>
 
-localStorage.setItem("pedidos",JSON.stringify(pedidos));
+        <p>Nuestras pizzas conservan el auténtico sabor italiano.</p>
+      </div>
 
-carrito=[];
-render();
+      <div class="beneficio">
+        <h3>Entrega Rápida</h3>
 
-alert("Pedido realizado ✅");
-}
-</script>
+        <p>Tu pedido llega caliente y en el menor tiempo posible.</p>
+      </div>
+    </section>
 
-</body>
+    <!-- ================= MENU ================= -->
+
+    <section class="menu" id="menu">
+      <div class="titulo">
+        <h2>Nuestras Especialidades</h2>
+
+        <p>Elegí tu pizza favorita.</p>
+      </div>
+
+      <div id="catalogo" class="catalogo">
+        <!-- home.js genera las cards -->
+      </div>
+    </section>
+
+    <!-- ================= CARRITO ================= -->
+
+    <aside id="carrito" class="carrito">
+      <div class="carrito-header">
+        <h2>Mi carrito</h2>
+
+        <button id="cerrarCarrito">✕</button>
+      </div>
+
+      <div id="itemsCarrito" class="itemsCarrito"></div>
+
+      <div class="footerCarrito">
+        <h3>
+          Total:
+
+          <span id="totalCarrito"> $0 </span>
+        </h3>
+
+        <button id="finalizarCompra">Finalizar pedido</button>
+      </div>
+    </aside>
+
+    <div id="fondoOscuro"></div>
+    <!--================== FOOTER ==================-->
+
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-info">
+          <h2>ilCapo</h2>
+
+          <p>
+            Pizzería artesanal inspirada en la tradición italiana. Calidad,
+            sabor y pasión en cada pizza.
+          </p>
+        </div>
+
+        <div class="footer-links">
+          <h3>Navegación</h3>
+
+          <a href="#">Inicio</a>
+          <a href="#menu">Menú</a>
+          <a href="pedidos.html">Mis pedidos</a>
+        </div>
+
+        <div class="footer-contacto">
+          <h3>Contacto</h3>
+
+          <p>📍 Tucumán, Argentina</p>
+
+          <p>📞 +54 381 123-4567</p>
+
+          <p>✉ contacto@ilcapo.com</p>
+        </div>
+      </div>
+
+      <div class="copyright">
+        © 2026 ilCapo - Todos los derechos reservados.
+      </div>
+    </footer>
+
+    <!--================== TOAST ==================-->
+
+    <div id="toast" class="toast">Producto agregado correctamente</div>
+
+    <!--================== SCRIPTS ==================-->
+
+    <script src="../assets/js/main.js"></script>
+
+    <script src="home.js"></script>
+  </body>
 </html>

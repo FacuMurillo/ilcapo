@@ -1,66 +1,67 @@
-protectAdmin();
-
 let pizzas = JSON.parse(localStorage.getItem("pizzas")) || [];
 
-/* IMAGENES AUTOMATICAS POR NOMBRE */
-function getImage(nombre){
-return `https://source.unsplash.com/400x300/?pizza,${nombre}`;
+const grid = document.getElementById("gridPizzas");
+
+function renderPizzas(){
+
+grid.innerHTML = "";
+
+pizzas.forEach(p => {
+
+grid.innerHTML += `
+<div class="pizza-card">
+
+<img src="${p.imagen || '../assets/img/default.jpg'}">
+
+<div class="pizza-info">
+
+<h3>${p.nombre}</h3>
+
+<p>$${p.precio}</p>
+
+<button onclick="eliminarPizza(${p.id})">Eliminar</button>
+
+</div>
+
+</div>
+`;
+
+});
+
 }
 
-/* AGREGAR PIZZA */
 function agregarPizza(){
 
-let nombre = document.getElementById("nombre").value;
-let precio = document.getElementById("precio").value;
-
-if(!nombre || !precio){
-alert("Completa los campos");
-return;
-}
-
 let nueva = {
-nombre,
-precio,
-img: getImage(nombre)
+
+id: Date.now(),
+
+nombre: document.getElementById("nombre").value,
+
+precio: Number(document.getElementById("precio").value),
+
+stock: 10,
+
+imagen: "../assets/img/pizzas/default.jpg"
+
 };
 
 pizzas.push(nueva);
 
 localStorage.setItem("pizzas", JSON.stringify(pizzas));
 
-render();
-}
-
-/* RENDER */
-function render(){
-
-let grid = document.getElementById("gridPizzas");
-grid.innerHTML = "";
-
-pizzas.forEach((p, index) => {
-
-let div = document.createElement("div");
-div.className = "card pizza";
-
-div.innerHTML = `
-<img src="${p.img}" />
-<h3>${p.nombre}</h3>
-<p>$${p.precio}</p>
-<button onclick="eliminar(${index})">Eliminar</button>
-`;
-
-grid.appendChild(div);
-
-});
+renderPizzas();
 
 }
 
-/* ELIMINAR */
-function eliminar(i){
-pizzas.splice(i,1);
+function eliminarPizza(id){
+
+pizzas = pizzas.filter(p => p.id !== id);
+
 localStorage.setItem("pizzas", JSON.stringify(pizzas));
-render();
+
+renderPizzas();
+
 }
 
-/* INIT */
-render();
+renderPizzas();

@@ -1,71 +1,191 @@
-let carrito=[];
+let pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
+let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
-const recetas={
-especial:{prepizza:1,salsa:0.15,mozzarella:0.3,jamon:0.12},
-muzzarella:{prepizza:1,salsa:0.15,mozzarella:0.3},
-calabresa:{prepizza:1,salsa:0.15,mozzarella:0.3,calabresa:0.2}
-};
+let pizzas = JSON.parse(localStorage.getItem("pizzas")) || [];
 
-// stock global simulado
-let stock={
-prepizza:10,
-salsa:5,
-mozzarella:5,
-jamon:3,
-calabresa:3
-};
+/* =========================
+   FALLBACK PIZZAS (PRO)
+========================= */
+if(pizzas.length === 0){
+pizzas = [
+{
+id:1,
+nombre:"Napolitana",
+precio:8500,
+imagen:"../assets/img/napolitana.jpg"
+},
+{
+id:2,
+nombre:"Muzzarella",
+precio:8000,
+imagen:"../assets/img/muzzarella.webp"
+},
+{
+id:3,
+nombre:"Especial",
+precio:9500,
+imagen:"../assets/img/especial.jpg"
+},
+{
+id:4,
+nombre:"Calabresa",
+precio:10000,
+imagen:"../assets/img/calabresa.jpg"
+},
+{
+id:5,
+nombre:"Cuatro Quesos",
+precio:10500,
+imagen:"../assets/img/cuatroquesos.jpeg"
+},
+{
+id:6,
+nombre:"Fugazzetta",
+precio:9000,
+imagen:"../assets/img/fugazzetta.webp"
+}
+];
 
-function render(){
-let list=document.getElementById("carrito");
-list.innerHTML="";
-carrito.forEach((p,i)=>{
-let li=document.createElement("li");
-li.innerText="🍕 "+p;
-li.style.padding="5px 0";
-list.appendChild(li);
+localStorage.setItem("pizzas", JSON.stringify(pizzas));
+}
+
+/* =========================
+   RENDER PIZZAS
+========================= */
+const contenedor = document.getElementById("pizzasContainer");
+
+function renderPizzas(){
+
+contenedor.innerHTML = "";
+
+pizzas.forEach(p => {
+
+contenedor.innerHTML += `
+<div class="pizza-card">
+
+<img src="${p.imagen}" alt="${p.nombre}">
+
+<div class="pizza-info">
+
+<h3>${p.nombre}</h3>
+
+<p>$${p.precio}</p>
+
+<button onclick="addPizza(${p.id})">
+Agregar
+</button>
+
+</div>
+
+</div>
+`;
+
+});
+
+}
+
+/* =========================
+   AGREGAR AL CARRITO
+========================= */
+function addPizza(id){
+
+let pizza = pizzas.find(p => p.id === id);
+
+if(!pizza) return;
+
+let item = carrito.find(i => i.id === id);
+
+if(item){
+item.cantidad += 1;
+} else {
+carrito.push({
+id: pizza.id,
+nombre: pizza.nombre,
+precio: pizza.precio,
+cantidad: 1
 });
 }
 
-function add(p){
-carrito.push(p);
-render();
+saveCarrito();
+renderCarrito();
+
 }
 
-function confirmar(){
+/* =========================
+   GUARDAR CARRITO
+========================= */
+function saveCarrito(){
+localStorage.setItem("carrito", JSON.stringify(carrito));
+}
 
-let temp={...stock};
+/* =========================
+   RENDER CARRITO
+========================= */
+function renderCarrito(){
 
-// verificar stock antes
-for(let p of carrito){
-let r=recetas[p];
-for(let ing in r){
-if(temp[ing]===undefined || temp[ing]<r[ing]){
-alert("❌ No hay stock suficiente");
+let ul = document.getElementById("carrito");
+
+ul.innerHTML = "";
+
+if(carrito.length === 0){
+ul.innerHTML = "<li>Carrito vacío</li>";
 return;
 }
-}
-}
 
-// descontar
-for(let p of carrito){
-let r=recetas[p];
-for(let ing in r){
-temp[ing]-=r[ing];
-}
-}
+carrito.forEach(i => {
 
-stock=temp;
+ul.innerHTML += `
+<li>
+${i.nombre} x${i.cantidad} - $${i.precio * i.cantidad}
+</li>
+`;
 
-// guardar pedido (simulado)
-let pedidos=JSON.parse(localStorage.getItem("pedidos"))||[];
-pedidos.push({
-fecha:new Date().toLocaleString(),
-items:[...carrito]
 });
-localStorage.setItem("pedidos",JSON.stringify(pedidos));
 
-carrito=[];
-render();
-
-alert("✅ Pedido confirmado");
 }
+
+/* =========================
+   CONFIRMAR PEDIDO
+========================= */
+function confirmar() {
+
+  if (carrito.length === 0) {
+    alert("Carrito vacío");
+    return;
+  }
+
+  let session = JSON.parse(localStorage.getItem("user"));
+
+  if (!session) return;
+
+  let nuevoPedido = {
+    id: Date.now(),
+
+    // 🔥 IMPORTANTE: guardar nombre real
+    user: session.user,  
+
+    role: session.role,
+
+    fecha: new Date().toLocaleString(),
+
+    estado: "Pendiente",
+
+    items: [...carrito],
+
+    total: carrito.reduce((acc, i) => acc + i.precio * i.cantidad, 0)
+  };
+
+  pedidos.push(nuevoPedido);
+  localStorage.setItem("pedidos", JSON.stringify(pedidos));
+
+  carrito = [];
+  localStorage.removeItem("carrito");
+
+  renderCarrito();
+
+  alert("Pedido creado ✔");
+}
+
+/* INIT */
+renderPizzas();
+renderCarrito();

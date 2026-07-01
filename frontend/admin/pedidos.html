@@ -1,72 +1,70 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 <meta charset="UTF-8">
 <title>Pedidos | ilCapo ERP</title>
+
 <link rel="stylesheet" href="../assets/css/dashboard.css">
+<link rel="icon" type="image/png" href="../assets/icons/favicon.ico" />
 </head>
 
 <body>
 
+<!-- SIDEBAR -->
 <div class="sidebar">
-  <div class="brand">ilCapo</div>
 
-  <nav>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="pizzas.html">Pizzas</a>
-    <a href="ingredientes.html">Ingredientes</a>
-    <a href="pedidos.html">Pedidos</a>
-    <a href="proveedores.html">Proveedores</a>
-    <a href="clientes.html">Clientes</a>
-    <a href="reportes.html">Reportes</a>
+  <div class="brand">
+    <div>
+      <h2>ilCapo</h2>
+      <span>Admin Panel</span>
+    </div>
+  </div>
+
+  <nav class="menu">
+
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="pizzas.html">🍕 Pizzas</a>
+    <a href="ingredientes.html">🧀 Ingredientes</a>
+    <a href="pedidos.html" class="active">📦 Pedidos</a>
+    <a href="proveedores.html">🚚 Proveedores</a>
+    <a href="clientes.html">👥 Clientes</a>
+    <a href="reportes.html">📈 Reportes</a>
+
   </nav>
 
-  <div class="logout">
+  <div class="logoutBox">
     <button onclick="logout()">Cerrar sesión</button>
   </div>
+
 </div>
 
+<!-- MAIN -->
 <div class="main">
 
-<div class="topbar">
-<h3>Pedidos</h3>
-</div>
+  <div class="topbar">
+    <h3>Pedidos</h3>
+  </div>
 
-<div class="content">
+  <div class="content">
 
-<div class="cards">
+    <!-- PIZZAS DINÁMICAS -->
+    <div class="pizza-grid" id="pizzasContainer"></div>
 
-<div class="card">
-<h3>🍕 Especial</h3>
-<p>$9500</p>
-<button onclick="add('especial')">Agregar</button>
-</div>
+    <!-- 🛒 CARRITO -->
+    <div style="margin-top:20px;background:#fff;padding:20px;border-radius:12px">
 
-<div class="card">
-<h3>🍕 Muzzarella</h3>
-<p>$8000</p>
-<button onclick="add('muzzarella')">Agregar</button>
-</div>
+      <h3>🛒 Carrito</h3>
 
-<div class="card">
-<h3>🍕 Calabresa</h3>
-<p>$10000</p>
-<button onclick="add('calabresa')">Agregar</button>
-</div>
+      <ul id="carrito"></ul>
 
-</div>
+      <button onclick="confirmar()" style="margin-top:10px">
+        Confirmar pedido
+      </button>
 
-<div style="margin-top:20px;background:#fff;padding:20px;border-radius:12px">
-<h3>🛒 Carrito</h3>
-<ul id="carrito"></ul>
+    </div>
 
-<button onclick="confirmar()" style="margin-top:10px;padding:10px 15px;background:#c62828;color:#fff;border:none;border-radius:8px">
-Confirmar pedido
-</button>
-
-</div>
-
-</div>
+  </div>
 
 </div>
 

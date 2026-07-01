@@ -4,69 +4,60 @@
 <meta charset="UTF-8">
 <title>Clientes | ilCapo</title>
 <link rel="stylesheet" href="../assets/css/dashboard.css">
+<link rel="icon" type="image/png" href="../assets/icons/favicon.ico" />
 </head>
 
 <body>
 
 <div class="sidebar">
-  <div class="brand">ilCapo</div>
 
-  <nav>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="pizzas.html">Pizzas</a>
-    <a href="ingredientes.html">Ingredientes</a>
-    <a href="pedidos.html">Pedidos</a>
-    <a href="proveedores.html">Proveedores</a>
-    <a href="clientes.html">Clientes</a>
-    <a href="reportes.html">Reportes</a>
+  <div class="brand">
+    <div>
+      <h2>ilCapo</h2>
+      <span>Admin Panel</span>
+    </div>
+  </div>
+
+  <nav class="menu">
+
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="pizzas.html">🍕 Pizzas</a>
+    <a href="ingredientes.html">🧀 Ingredientes</a>
+    <a href="pedidos.html">📦 Pedidos</a>
+    <a href="proveedores.html">🚚 Proveedores</a>
+    <a href="clientes.html" class="active">👥 Clientes</a>
+    <a href="reportes.html">📈 Reportes</a>
+
   </nav>
 
-  <div class="logout">
+  <div class="logoutBox">
     <button onclick="logout()">Cerrar sesión</button>
   </div>
+
 </div>
+
 <div class="main">
 
-<div class="topbar">
-<h3>Clientes</h3>
-</div>
+  <div class="topbar">
+    <h3>👥 Clientes registrados</h3>
+  </div>
 
-<div class="content">
+  <div class="content">
 
-<div class="card">
-<h3>Listado de clientes</h3>
-<p>Clientes registrados en el sistema</p>
+    <div class="card">
+      <h3>Usuarios del sistema</h3>
+      <p>Clientes que se registraron en el login</p>
 
-<ul id="listaClientes" style="margin-top:15px"></ul>
+      <ul id="listaClientes" style="margin-top:15px"></ul>
 
-</div>
+    </div>
 
-</div>
+  </div>
 
 </div>
 
 <script src="../assets/js/main.js"></script>
-
-<script>
-protectAdmin();
-
-let pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
-
-let clientes = [...new Set(pedidos.map(p => p.user))];
-
-let list = document.getElementById("listaClientes");
-
-if(clientes.length === 0){
-list.innerHTML = "<li>No hay clientes aún</li>";
-}
-
-clientes.forEach(c => {
-let li = document.createElement("li");
-li.style.padding = "8px 0";
-li.innerText = "Usuario: " + c;
-list.appendChild(li);
-});
-</script>
+<script src="../assets/js/clientes.js"></script>
 
 </body>
 </html>

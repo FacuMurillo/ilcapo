@@ -1,83 +1,103 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Proveedores | ilCapo</title>
-<link rel="stylesheet" href="../assets/css/dashboard.css">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Proveedores | ilCapo</title>
+    <link rel="stylesheet" href="../assets/css/dashboard.css" />
+    <link rel="icon" type="image/png" href="../assets/icons/favicon.ico" />
+  </head>
 
-<body>
+  <body>
+    <div class="sidebar">
+      <div class="brand">
+        <div>
+          <h2>ilCapo</h2>
+          <span>Admin Panel</span>
+        </div>
+      </div>
 
-<div class="sidebar">
-  <div class="brand">ilCapo</div>
+      <nav class="menu">
+        <a href="dashboard.html">📊 Dashboard</a>
+        <a href="pizzas.html">🍕 Pizzas</a>
+        <a href="ingredientes.html">🧀 Ingredientes</a>
+        <a href="pedidos.html">📦 Pedidos</a>
+        <a href="proveedores.html" class="active">🚚 Proveedores</a>
+        <a href="clientes.html">👥 Clientes</a>
+        <a href="reportes.html">📈 Reportes</a>
+      </nav>
 
-  <nav>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="pizzas.html">Pizzas</a>
-    <a href="ingredientes.html">Ingredientes</a>
-    <a href="pedidos.html">Pedidos</a>
-    <a href="proveedores.html">Proveedores</a>
-    <a href="clientes.html">Clientes</a>
-    <a href="reportes.html">Reportes</a>
-  </nav>
+      <div class="logoutBox">
+        <button onclick="logout()">Cerrar sesión</button>
+      </div>
+    </div>
 
-  <div class="logout">
-    <button onclick="logout()">Cerrar sesión</button>
-  </div>
-</div>
+    <div class="main">
+      <div class="topbar">
+        <h3>🚚 Proveedores</h3>
+      </div>
 
-<div class="main">
+      <div class="content">
+        <div class="cards">
+          <div class="card">
+            <h3>Proveedor 1</h3>
+            <p>Lácteos SRL</p>
+          </div>
 
-<div class="topbar">
-<h3>🚚 Proveedores</h3>
-</div>
+          <div class="card">
+            <h3>Proveedor 2</h3>
+            <p>Panificados SA</p>
+          </div>
+        </div>
 
-<div class="content">
+        <!-- FORM PEDIDO -->
+        <div class="card" style="margin-top: 20px">
+          <h3>🧾 Hacer pedido a proveedor</h3>
 
-<div class="cards">
+          <select id="proveedor">
+            <option value="Lácteos SRL">Lácteos SRL</option>
+            <option value="Panificados SA">Panificados SA</option>
+          </select>
 
-<div class="card">
-<h3>Proveedor 1</h3>
-<p>Lácteos SRL</p>
-<button onclick="reponer()">Reponer stock</button>
-</div>
+          <select id="ingrediente">
+            <option value="mozzarella">Mozzarella</option>
+            <option value="salsa">Salsa</option>
+            <option value="prepizza">Prepizza</option>
+            <option value="jamon">Jamón</option>
+            <option value="anchoas">Anchoas</option>
+            <option value="ternera">Ternera</option>
+            <option value="calabresa">Calabresa</option>
+            <option value="roquefort">Roquefort</option>
+          </select>
 
-<div class="card">
-<h3>Proveedor 2</h3>
-<p>Panificados SA</p>
-<button onclick="reponer()">Reponer stock</button>
-</div>
+          <input id="cantidad" type="number" placeholder="Cantidad" />
 
-</div>
+          <button onclick="hacerPedidoProveedor()">Enviar pedido</button>
+        </div>
+      </div>
+    </div>
 
-</div>
+    <script src="../assets/js/main.js"></script>
 
-</div>
+    <script>
+      protectAdmin();
 
-<script src="../assets/js/main.js"></script>
+      function reponer() {
+        let ing = JSON.parse(localStorage.getItem("stock")) || {
+          mozzarella: 2,
+          salsa: 2,
+          prepizza: 5,
+          jamon: 1,
+        };
 
-<script>
-protectAdmin();
+        ing.mozzarella += 10;
+        ing.salsa += 10;
+        ing.prepizza += 20;
+        ing.jamon += 5;
 
-function reponer(){
+        localStorage.setItem("stock", JSON.stringify(ing));
 
-let ing = JSON.parse(localStorage.getItem("stock")) || {
-mozzarella: 2,
-salsa: 2,
-prepizza: 5,
-jamon: 1
-};
-
-ing.mozzarella += 10;
-ing.salsa += 10;
-ing.prepizza += 20;
-ing.jamon += 5;
-
-localStorage.setItem("stock", JSON.stringify(ing));
-
-alert("Stock repuesto desde proveedor ✔");
-}
-</script>
-
-</body>
+        alert("Stock repuesto desde proveedor ✔");
+      }
+    </script>
+  </body>
 </html>
