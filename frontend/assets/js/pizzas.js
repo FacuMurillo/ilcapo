@@ -1,66 +1,142 @@
 protectAdmin();
 
-let pizzas = JSON.parse(localStorage.getItem("pizzas")) || [];
+let pizzas = [];
+
+const API_URL = "http://localhost:3000/api/pizzas";
 
 /* IMAGENES AUTOMATICAS POR NOMBRE */
-function getImage(nombre){
-return `https://source.unsplash.com/400x300/?pizza,${nombre}`;
+function getImage(nombre) {
+    return `https://source.unsplash.com/400x300/?pizza,${encodeURIComponent(nombre)}`;
+}
+
+/* CARGAR PIZZAS */
+async function cargarPizzas() {
+
+    try {
+
+        const response = await fetch(API_URL);
+
+        pizzas = await response.json();
+
+        render();
+
+    } catch (error) {
+
+        console.error("Error al cargar pizzas:", error);
+
+    }
+
 }
 
 /* AGREGAR PIZZA */
-function agregarPizza(){
+async function agregarPizza() {
 
-let nombre = document.getElementById("nombre").value;
-let precio = document.getElementById("precio").value;
+    const nombre = document.getElementById("nombre").value;
+    const precio = document.getElementById("precio").value;
 
-if(!nombre || !precio){
-alert("Completa los campos");
-return;
-}
+    if (!nombre || !precio) {
+        alert("Completa los campos");
+        return;
+    }
 
-let nueva = {
-nombre,
-precio,
-img: getImage(nombre)
-};
+    const nuevaPizza = {
 
-pizzas.push(nueva);
+        nombre,
+        descripcion: "",
+        precio,
+        imagen: getImage(nombre)
 
-localStorage.setItem("pizzas", JSON.stringify(pizzas));
+    };
 
-render();
+    try {
+
+        const response = await fetch(API_URL, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(nuevaPizza)
+
+        });
+
+        if (!response.ok) {
+            throw new Error("No se pudo guardar la pizza");
+        }
+
+        document.getElementById("nombre").value = "";
+        document.getElementById("precio").value = "";
+
+        cargarPizzas();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Error al guardar la pizza");
+
+    }
+
 }
 
 /* RENDER */
-function render(){
+function render() {
 
-let grid = document.getElementById("gridPizzas");
-grid.innerHTML = "";
+    const grid = document.getElementById("gridPizzas");
 
-pizzas.forEach((p, index) => {
+    grid.innerHTML = "";
 
-let div = document.createElement("div");
-div.className = "card pizza";
+    pizzas.forEach((p) => {
 
-div.innerHTML = `
-<img src="${p.img}" />
-<h3>${p.nombre}</h3>
-<p>$${p.precio}</p>
-<button onclick="eliminar(${index})">Eliminar</button>
-`;
+        const div = document.createElement("div");
 
-grid.appendChild(div);
+        div.className = "card pizza";
 
-});
+        div.innerHTML = `
+            <img src="${p.imagen}" alt="${p.nombre}">
+            <h3>${p.nombre}</h3>
+            <p>$${p.precio}</p>
+            <button onclick="eliminar(${p.id})">Eliminar</button>
+        `;
+
+        grid.appendChild(div);
+
+    });
 
 }
 
 /* ELIMINAR */
-function eliminar(i){
-pizzas.splice(i,1);
-localStorage.setItem("pizzas", JSON.stringify(pizzas));
-render();
+async function eliminar(id) {
+
+    if (!confirm("¿Eliminar esta pizza?")) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(`${API_URL}/${id}`, {
+
+            method: "DELETE"
+
+        });
+
+        if (!response.ok) {
+            throw new Error("No se pudo eliminar");
+        }
+
+        cargarPizzas();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Error al eliminar la pizza");
+
+    }
+
 }
 
 /* INIT */
-render();
+cargarPizzas();
