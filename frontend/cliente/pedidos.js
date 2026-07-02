@@ -1,64 +1,96 @@
 protectClient();
 
-let pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
+let pedidos = [];
 
 const contenedor = document.getElementById("listaPedidos");
 
-function renderPedidos(){
+/*==============================
+      CARGAR PEDIDOS DESDE API
+==============================*/
 
-contenedor.innerHTML="";
+async function cargarPedidos() {
 
-if(pedidos.length===0){
-contenedor.innerHTML="<p>No tienes pedidos aún.</p>";
-return;
+    try {
+
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        if (!user) return;
+
+        const res = await fetch(`http://localhost:3000/api/pedidos?cliente=${user.user}`);
+
+        pedidos = await res.json();
+
+        renderPedidos();
+
+    } catch (error) {
+        console.error("Error cargando pedidos:", error);
+    }
 }
 
-pedidos.forEach(p=>{
+/*==============================
+      RENDER
+==============================*/
 
-let itemsTexto = p.items.map(i=>{
-return `${i.nombre} x${i.cantidad}`;
-}).join(", ");
+function renderPedidos() {
 
-contenedor.innerHTML+=`
-<div class="pedido-card">
+    contenedor.innerHTML = "";
 
-<div class="pedido-header">
+    if (pedidos.length === 0) {
+        contenedor.innerHTML = "<p>No tienes pedidos aún.</p>";
+        return;
+    }
 
-<span class="pedido-id">#${p.id}</span>
+    pedidos.forEach(p => {
 
-<span class="estado ${estadoClass(p.estado)}">
-${p.estado}
-</span>
+        let itemsTexto = p.items
+            ? p.items.map(i => `${i.nombre} x${i.cantidad}`).join(", ")
+            : "";
 
-</div>
+        contenedor.innerHTML += `
+        <div class="pedido-card">
 
-<div class="pedido-items">
-${itemsTexto}
-</div>
+            <div class="pedido-header">
 
-<div class="pedido-total">
-Total: $${p.total}
-</div>
+                <span class="pedido-id">#${p.id}</span>
 
-<div class="pedido-fecha">
-${p.fecha}
-</div>
+                <span class="estado ${estadoClass(p.estado)}">
+                    ${p.estado}
+                </span>
 
-</div>
-`;
+            </div>
 
-});
+            <div class="pedido-items">
+                ${itemsTexto}
+            </div>
 
+            <div class="pedido-total">
+                Total: $${p.total}
+            </div>
+
+            <div class="pedido-fecha">
+                ${p.fecha}
+            </div>
+
+        </div>
+        `;
+    });
 }
 
-function estadoClass(estado){
+/*==============================
+      ESTADOS
+==============================*/
 
-if(estado==="Pendiente") return "pendiente";
-if(estado==="En proceso") return "enproceso";
-if(estado==="Entregado") return "entregado";
+function estadoClass(estado) {
 
-return "pendiente";
+    if (estado === "Pendiente") return "pendiente";
+    if (estado === "En proceso") return "enproceso";
+    if (estado === "Entregado") return "entregado";
 
+    return "pendiente";
 }
 
-renderPedidos();
+/*==============================
+      INICIO
+==============================*/
+
+cargarPedidos();

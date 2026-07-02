@@ -1,473 +1,288 @@
 protectClient();
 
 /*==============================
-      DATOS
+      ESTADO
 ==============================*/
 
-let pizzas = JSON.parse(localStorage.getItem("pizzas")) || [];
-
+let pizzas = [];
 let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+/*==============================
+      ELEMENTOS
+==============================*/
 
 const catalogo = document.getElementById("catalogo");
 const buscador = document.getElementById("buscar");
 const contador = document.getElementById("contadorCarrito");
 
 /*==============================
-SI NO EXISTEN PIZZAS
-CREAMOS LAS PREDEFINIDAS
+      CARGAR PIZZAS DESDE API
 ==============================*/
 
-if(pizzas.length===0){
-
-pizzas=[
-
-{
-id:1,
-nombre:"Napolitana",
-descripcion:"Mozzarella, tomate fresco y orégano.",
-precio:8500,
-stock:15,
-categoria:"Clásicas",
-imagen:"../assets/img/pizzas/napolitana.jpg"
-},
-
-{
-id:2,
-nombre:"Especial",
-descripcion:"Mozzarella, jamón y aceitunas.",
-precio:9800,
-stock:12,
-categoria:"Especiales",
-imagen:"../assets/img/pizzas/especial.jpg"
-},
-
-{
-id:3,
-nombre:"Muzzarella",
-descripcion:"La clásica de mozzarella.",
-precio:7900,
-stock:20,
-categoria:"Clásicas",
-imagen:"../assets/img/pizzas/muzzarella.jpg"
-},
-
-{
-id:4,
-nombre:"Fugazzetta",
-descripcion:"Cebolla caramelizada y mozzarella.",
-precio:9300,
-stock:14,
-categoria:"Especiales",
-imagen:"../assets/img/pizzas/fugazzetta.jpg"
-},
-
-{
-id:5,
-nombre:"Cuatro Quesos",
-descripcion:"Mozzarella, parmesano, roquefort y provolone.",
-precio:10500,
-stock:10,
-categoria:"Especiales",
-imagen:"../assets/img/pizzas/cuatroquesos.jpg"
-},
-
-{
-id:6,
-nombre:"Ternera",
-descripcion:"Ternera, mozzarella y salsa.",
-precio:11000,
-stock:8,
-categoria:"Especiales",
-imagen:"../assets/img/pizzas/ternera.jpg"
-},
-
-{
-id:7,
-nombre:"Anchoas",
-descripcion:"Mozzarella y anchoas.",
-precio:9900,
-stock:9,
-categoria:"Especiales",
-imagen:"../assets/img/pizzas/anchoas.jpg"
-},
-
-{
-id:8,
-nombre:"Roquefort",
-descripcion:"Mozzarella y queso roquefort.",
-precio:9800,
-stock:11,
-categoria:"Especiales",
-imagen:"../assets/img/pizzas/roquefort.jpg"
-},
-
-{
-id:9,
-nombre:"Calabresa",
-descripcion:"Mozzarella y salame calabrés.",
-precio:10200,
-stock:13,
-categoria:"Especiales",
-imagen:"../assets/img/pizzas/calabresa.jpg"
-}
-
-];
-
-localStorage.setItem("pizzas",JSON.stringify(pizzas));
-
+async function cargarPizzas() {
+    try {
+        const res = await fetch("http://localhost:3000/api/pizzas");
+        pizzas = await res.json();
+        renderPizzas(pizzas);
+    } catch (error) {
+        console.error("Error cargando pizzas:", error);
+    }
 }
 
 /*==============================
-RENDER PIZZAS
+      RENDER PIZZAS
 ==============================*/
 
-function renderPizzas(lista){
+function renderPizzas(lista) {
 
-catalogo.innerHTML="";
+    catalogo.innerHTML = "";
 
-lista.forEach(pizza=>{
+    lista.forEach(pizza => {
 
-catalogo.innerHTML+=`
+        catalogo.innerHTML += `
+        <div class="pizza-card">
 
-<div class="pizza-card">
+            <div class="pizza-img">
+                <img src="${pizza.imagen}" alt="${pizza.nombre}">
+            </div>
 
-<div class="pizza-img">
+            <div class="pizza-info">
 
-<img src="${pizza.imagen}" alt="${pizza.nombre}">
+                <h3>${pizza.nombre}</h3>
 
-</div>
+                <p>${pizza.descripcion || ""}</p>
 
-<div class="pizza-info">
+                <div class="precio">
+                    $${pizza.precio}
+                </div>
 
-<h3>${pizza.nombre}</h3>
+                <button class="agregar" onclick="agregarCarrito(${pizza.id})">
+                    Agregar al carrito
+                </button>
 
-<p>${pizza.descripcion}</p>
+            </div>
 
-<span class="stock">
-
-Stock disponible: ${pizza.stock}
-
-</span>
-
-<div class="precio">
-
-$${pizza.precio}
-
-</div>
-
-<button class="agregar"
-
-onclick="agregarCarrito(${pizza.id})">
-
-Agregar al carrito
-
-</button>
-
-</div>
-
-</div>
-
-`;
-
-});
-
+        </div>
+        `;
+    });
 }
 
 /*==============================
-BUSCADOR
+      BUSCADOR
 ==============================*/
 
-buscador.addEventListener("keyup",()=>{
+buscador.addEventListener("keyup", () => {
 
-const texto=buscador.value.toLowerCase();
+    const texto = buscador.value.toLowerCase();
 
-const filtradas=pizzas.filter(p=>
+    const filtradas = pizzas.filter(p =>
+        p.nombre.toLowerCase().includes(texto)
+    );
 
-p.nombre.toLowerCase().includes(texto)
-
-);
-
-renderPizzas(filtradas);
-
+    renderPizzas(filtradas);
 });
 
 /*==============================
-INICIO
+      INICIO
 ==============================*/
 
-renderPizzas(pizzas);
-
+cargarPizzas();
 actualizarContador();
 
 /*==============================
-      CARRITO - AGREGAR
+      CARRITO
 ==============================*/
 
-function agregarCarrito(id){
+function agregarCarrito(id) {
 
-let pizza = pizzas.find(p=>p.id===id);
+    let pizza = pizzas.find(p => p.id === id);
 
-let item = carrito.find(p=>p.id===id);
+    let item = carrito.find(p => p.id === id);
 
-if(item){
+    if (item) {
+        item.cantidad++;
+    } else {
+        carrito.push({
+            id: pizza.id,
+            nombre: pizza.nombre,
+            precio: pizza.precio,
+            imagen: pizza.imagen,
+            cantidad: 1
+        });
+    }
 
-item.cantidad++;
-
-}else{
-
-carrito.push({
-id:pizza.id,
-nombre:pizza.nombre,
-precio:pizza.precio,
-imagen:pizza.imagen,
-cantidad:1
-});
-
-}
-
-guardarCarrito();
-actualizarContador();
-mostrarToast("Agregado al carrito");
-
+    guardarCarrito();
+    actualizarContador();
+    mostrarToast("Agregado al carrito");
 }
 
 /*==============================
-GUARDAR CARRITO
+      GUARDAR CARRITO
 ==============================*/
 
-function guardarCarrito(){
-
-localStorage.setItem("carrito",JSON.stringify(carrito));
-
+function guardarCarrito() {
+    localStorage.setItem("carrito", JSON.stringify(carrito));
 }
 
 /*==============================
-CONTADOR
+      CONTADOR
 ==============================*/
 
-function actualizarContador(){
-
-let total=carrito.reduce((acc,p)=>acc+p.cantidad,0);
-
-contador.innerText=total;
-
+function actualizarContador() {
+    let total = carrito.reduce((acc, p) => acc + p.cantidad, 0);
+    contador.innerText = total;
 }
 
 /*==============================
-MOSTRAR CARRITO
+      RENDER CARRITO
 ==============================*/
 
-const carritoPanel=document.getElementById("carrito");
-const fondo=document.getElementById("fondoOscuro");
-const itemsCarrito=document.getElementById("itemsCarrito");
-const totalCarrito=document.getElementById("totalCarrito");
+const carritoPanel = document.getElementById("carrito");
+const fondo = document.getElementById("fondoOscuro");
+const itemsCarrito = document.getElementById("itemsCarrito");
+const totalCarrito = document.getElementById("totalCarrito");
 
-document.getElementById("abrirCarrito").onclick=()=>{
-
-carritoPanel.classList.add("active");
-fondo.classList.add("active");
-
-renderCarrito();
-
+document.getElementById("abrirCarrito").onclick = () => {
+    carritoPanel.classList.add("active");
+    fondo.classList.add("active");
+    renderCarrito();
 };
 
-document.getElementById("cerrarCarrito").onclick=()=>{
-
-carritoPanel.classList.remove("active");
-fondo.classList.remove("active");
-
+document.getElementById("cerrarCarrito").onclick = () => {
+    carritoPanel.classList.remove("active");
+    fondo.classList.remove("active");
 };
 
-fondo.onclick=()=>{
-
-carritoPanel.classList.remove("active");
-fondo.classList.remove("active");
-
+fondo.onclick = () => {
+    carritoPanel.classList.remove("active");
+    fondo.classList.remove("active");
 };
 
-/*==============================
-RENDER CARRITO
-==============================*/
+function renderCarrito() {
 
-function renderCarrito(){
+    itemsCarrito.innerHTML = "";
 
-itemsCarrito.innerHTML="";
+    let total = 0;
 
-let total=0;
+    carrito.forEach(item => {
 
-carrito.forEach(item=>{
+        total += item.precio * item.cantidad;
 
-total+=item.precio*item.cantidad;
+        itemsCarrito.innerHTML += `
+        <div class="item-carrito">
 
-itemsCarrito.innerHTML+=`
+            <img src="${item.imagen}">
 
-<div class="item-carrito">
+            <div class="item-info">
 
-<img src="${item.imagen}">
+                <h4>${item.nombre}</h4>
 
-<div class="item-info">
+                <span>$${item.precio}</span>
 
-<h4>${item.nombre}</h4>
+                <div class="item-cantidad">
 
-<span>$${item.precio}</span>
+                    <button onclick="restar(${item.id})">-</button>
 
-<div class="item-cantidad">
+                    <span>${item.cantidad}</span>
 
-<button onclick="restar(${item.id})">-</button>
+                    <button onclick="sumar(${item.id})">+</button>
 
-<span>${item.cantidad}</span>
+                </div>
 
-<button onclick="sumar(${item.id})">+</button>
+            </div>
 
-</div>
+        </div>
+        `;
+    });
 
-</div>
-
-</div>
-
-`;
-
-});
-
-totalCarrito.innerText="$"+total;
-
+    totalCarrito.innerText = "$" + total;
 }
 
 /*==============================
-SUMAR / RESTAR
+      SUMAR / RESTAR
 ==============================*/
 
-function sumar(id){
+function sumar(id) {
 
-let item=carrito.find(p=>p.id===id);
+    let item = carrito.find(p => p.id === id);
+    item.cantidad++;
 
-item.cantidad++;
-
-guardarCarrito();
-renderCarrito();
-actualizarContador();
-
+    guardarCarrito();
+    renderCarrito();
+    actualizarContador();
 }
 
-function restar(id){
+function restar(id) {
 
-let item=carrito.find(p=>p.id===id);
+    let item = carrito.find(p => p.id === id);
+    item.cantidad--;
 
-item.cantidad--;
+    if (item.cantidad <= 0) {
+        carrito = carrito.filter(p => p.id !== id);
+    }
 
-if(item.cantidad<=0){
-
-carrito=carrito.filter(p=>p.id!==id);
-
-}
-
-guardarCarrito();
-renderCarrito();
-actualizarContador();
-
+    guardarCarrito();
+    renderCarrito();
+    actualizarContador();
 }
 
 /*==============================
-TOAST
+      TOAST
 ==============================*/
 
-function mostrarToast(msg){
+function mostrarToast(msg) {
 
-let toast=document.getElementById("toast");
+    let toast = document.getElementById("toast");
 
-toast.innerText=msg;
+    toast.innerText = msg;
+    toast.classList.add("show");
 
-toast.classList.add("show");
-
-setTimeout(()=>{
-
-toast.classList.remove("show");
-
-},2000);
-
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 2000);
 }
+
 /*==============================
-    FINALIZAR PEDIDO
+      FINALIZAR PEDIDO (API)
 ==============================*/
 
-document.getElementById("finalizarCompra").onclick = ()=>{
+document.getElementById("finalizarCompra").onclick = async () => {
 
-if(carrito.length===0){
-mostrarToast("El carrito está vacío");
-return;
-}
+    if (carrito.length === 0) {
+        mostrarToast("El carrito está vacío");
+        return;
+    }
 
-/* CREAR PEDIDO */
+    let nuevoPedido = {
+        cliente: localStorage.getItem("user") || "cliente",
+        fecha: new Date().toLocaleString(),
+        estado: "Pendiente",
+        items: carrito,
+        total: carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0)
+    };
 
-let pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
+    try {
 
-let nuevoPedido = {
+        await fetch("http://localhost:3000/api/pedidos", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(nuevoPedido)
+        });
 
-id:Date.now(),
+        carrito = [];
+        localStorage.removeItem("carrito");
 
-cliente:localStorage.getItem("user") || "cliente",
+        actualizarContador();
+        renderCarrito();
 
-fecha:new Date().toLocaleDateString(),
+        mostrarToast("Pedido realizado con éxito 🎉");
 
-estado:"Pendiente",
+        carritoPanel.classList.remove("active");
+        fondo.classList.remove("active");
 
-items: carrito.map(p => ({
-    id: p.id,
-    nombre: p.nombre,
-    precio: p.precio,
-    cantidad: p.cantidad
-})),
-
-total:carrito.reduce((acc,p)=>acc+p.precio*p.cantidad,0)
-
-};
-
-pedidos.push(nuevoPedido);
-
-localStorage.setItem("pedidos",JSON.stringify(pedidos));
-
-/* DESCONTAR STOCK */
-
-let pizzasLS = JSON.parse(localStorage.getItem("pizzas")) || [];
-
-carrito.forEach(item=>{
-
-let pizza = pizzasLS.find(p=>p.id===item.id);
-
-if(pizza){
-
-pizza.stock -= item.cantidad;
-
-if(pizza.stock < 0) pizza.stock = 0;
-
-}
-
-});
-
-localStorage.setItem("pizzas",JSON.stringify(pizzasLS));
-
-/* LIMPIAR CARRITO */
-
-carrito = [];
-
-localStorage.removeItem("carrito");
-
-actualizarContador();
-
-renderCarrito();
-
-mostrarToast("Pedido realizado con éxito 🎉");
-
-/* CERRAR PANEL */
-
-document.getElementById("carrito").classList.remove("active");
-
-document.getElementById("fondoOscuro").classList.remove("active");
-
-/* RECARGAR CATÁLOGO */
-
-pizzas = pizzasLS;
-
-renderPizzas(pizzas);
-
+    } catch (error) {
+        console.error("Error al crear pedido:", error);
+    }
 };

@@ -1,67 +1,96 @@
-let pizzas = JSON.parse(localStorage.getItem("pizzas")) || [];
+
+let pizzas = [];
 
 const grid = document.getElementById("gridPizzas");
 
-function renderPizzas(){
-
-grid.innerHTML = "";
-
-pizzas.forEach(p => {
-
-grid.innerHTML += `
-<div class="pizza-card">
-
-<img src="${p.imagen || '../assets/img/default.jpg'}">
-
-<div class="pizza-info">
-
-<h3>${p.nombre}</h3>
-
-<p>$${p.precio}</p>
-
-<button onclick="eliminarPizza(${p.id})">Eliminar</button>
-
-</div>
-
-</div>
-`;
-
-});
-
+// ===============================
+// CARGAR PIZZAS DESDE BACKEND
+// ===============================
+async function cargarPizzas() {
+    try {
+        const res = await fetch("http://localhost:3000/api/pizzas");
+        pizzas = await res.json();
+        renderPizzas();
+    } catch (error) {
+        console.error("Error cargando pizzas:", error);
+    }
 }
 
-function agregarPizza(){
+// ===============================
+// RENDER
+// ===============================
+function renderPizzas() {
+    grid.innerHTML = "";
 
-let nueva = {
+    pizzas.forEach(p => {
+        grid.innerHTML += `
+        <div class="pizza-card">
 
-id: Date.now(),
+            <img src="${p.imagen || '../assets/img/default.jpg'}">
 
-nombre: document.getElementById("nombre").value,
+            <div class="pizza-info">
 
-precio: Number(document.getElementById("precio").value),
+                <h3>${p.nombre}</h3>
 
-stock: 10,
+                <p>$${p.precio}</p>
 
-imagen: "../assets/img/pizzas/default.jpg"
+                <button onclick="eliminarPizza(${p.id})">
+                    Eliminar
+                </button>
 
-};
+            </div>
 
-pizzas.push(nueva);
-
-localStorage.setItem("pizzas", JSON.stringify(pizzas));
-
-renderPizzas();
-
+        </div>
+        `;
+    });
 }
 
-function eliminarPizza(id){
+// ===============================
+// AGREGAR PIZZA (POST API)
+// ===============================
+async function agregarPizza() {
 
-pizzas = pizzas.filter(p => p.id !== id);
+    const nueva = {
+        nombre: document.getElementById("nombre").value,
+        precio: Number(document.getElementById("precio").value),
+        descripcion: "",
+        imagen: "../assets/img/pizzas/default.jpg"
+    };
 
-localStorage.setItem("pizzas", JSON.stringify(pizzas));
+    try {
+        await fetch("http://localhost:3000/api/pizzas", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(nueva)
+        });
 
-renderPizzas();
+        cargarPizzas(); // recargar desde DB
 
+    } catch (error) {
+        console.error("Error agregando pizza:", error);
+    }
 }
 
-renderPizzas();
+// ===============================
+// ELIMINAR PIZZA (DELETE API)
+// ===============================
+async function eliminarPizza(id) {
+
+    try {
+        await fetch(`http://localhost:3000/api/pizzas/${id}`, {
+            method: "DELETE"
+        });
+
+        cargarPizzas(); // recargar desde DB
+
+    } catch (error) {
+        console.error("Error eliminando pizza:", error);
+    }
+}
+
+// ===============================
+// INICIO
+// ===============================
+cargarPizzas();
